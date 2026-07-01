@@ -6,32 +6,32 @@ const Services = () => {
     {
       icon: FaVideo,
       title: 'Edición de Video',
-      description: 'Edición profesional con narrativa fluida y ritmo cautivador'
-    },
-    {
-      icon: FaPalette,
-      title: 'Diseño Gráfico',
-      description: 'Diseños visuales impactantes para marcas y proyectos'
-    },
-    {
-      icon: FaFilm,
-      title: 'Motion Graphics',
-      description: 'Animaciones y gráficos en movimiento que dan vida a tus ideas'
-    },
-    {
-      icon: FaCamera,
-      title: 'Post-producción',
-      description: 'Color grading, efectos visuales y corrección de color'
+      description: 'Edición profesional para redes sociales, empresas y creadores de contenido.'
     },
     {
       icon: FaPlay,
-      title: 'Producción Audiovisual',
-      description: 'Desde la pre-producción hasta la entrega final'
+      title: 'Contenido para Redes',
+      description: 'Reels, TikToks y videos optimizados para captar la atención desde el primer segundo.'
+    },
+    {
+      icon: FaFilm,
+      title: 'Videos Corporativos',
+      description: 'Edición de videos promocionales para marcas, constructoras, inmobiliarias y negocios.'
+    },
+    {
+      icon: FaCamera,
+      title: 'Postproducción',
+      description: 'Corrección de color, transiciones, música, subtítulos y retoques finales.'
+    },
+    {
+      icon: FaPalette,
+      title: 'Diseño para Contenido',
+      description: 'Miniaturas, portadas y piezas gráficas para potenciar tu presencia online.'
     },
     {
       icon: FaMagic,
-      title: 'Efectos Visuales',
-      description: 'VFX y composición para crear mundos visuales increíbles'
+      title: 'Edición Creativa',
+      description: 'Videos con ritmo, efectos y storytelling para destacar frente a la competencia.'
     }
   ]
 

@@ -16,7 +16,7 @@ const About = () => {
                 />
               </div>
               <div className="absolute -bottom-6 -right-6 bg-primary-500 rounded-2xl p-5">
-                <p className="text-white font-bold text-2xl">+5</p>
+                <p className="text-white font-bold text-2xl">+4</p>
                 <p className="text-white/80 text-xs">Años de experiencia</p>
               </div>
             </div>
@@ -28,7 +28,7 @@ const About = () => {
                 Sobre <span className="text-gradient-primary">Mí</span>
               </h2>
               <p className="text-white/60 text-lg mb-6">
-                Soy Pablo Barrios, un apasionado editor de video y diseñador gráfico con más de 5 años de experiencia creando contenido visual que impacta.
+                Soy Pablo Barrios, un apasionado editor de video y diseñador gráfico con más de 4 años de experiencia creando contenido visual que impacta.
               </p>
               <p className="text-white/60 text-lg mb-8">
                 Mi enfoque combina la técnica con la creatividad para contar historias que conectan emocionalmente con las audiencias. Desde spots publicitarios hasta contenido para redes sociales, cada proyecto es una oportunidad para crear algo único.
