@@ -1,40 +1,38 @@
 import { useState, useEffect } from 'react'
 
-const TypeWriter = ({ texts, delay = 2000 }) => {
-  const [currentTextIndex, setCurrentTextIndex] = useState(0)
-  const [currentText, setCurrentText] = useState('')
+const TypeWriter = ({ texts, delay = 3000 }) => {
+  const [text, setText] = useState('')
+  const [index, setIndex] = useState(0)
   const [isDeleting, setIsDeleting] = useState(false)
 
   useEffect(() => {
-    let timeout
+    let timer
 
-    const type = () => {
-      const fullText = texts[currentTextIndex]
-      
-      if (isDeleting) {
-        setCurrentText(fullText.substring(0, currentText.length - 1))
-        timeout = setTimeout(type, 50)
-      } else {
-        setCurrentText(fullText.substring(0, currentText.length + 1))
-        timeout = setTimeout(type, 100)
-      }
+    const fullText = texts[index]
 
-      if (!isDeleting && currentText === fullText) {
-        timeout = setTimeout(() => setIsDeleting(true), delay)
-      } else if (isDeleting && currentText === '') {
-        setIsDeleting(false)
-        setCurrentTextIndex((currentTextIndex + 1) % texts.length)
-      }
+    if (isDeleting) {
+      timer = setTimeout(() => {
+        setText(fullText.slice(0, text.length - 1))
+        if (text.length === 0) {
+          setIsDeleting(false)
+          setIndex((index + 1) % texts.length)
+        }
+      }, 50)
+    } else {
+      timer = setTimeout(() => {
+        setText(fullText.slice(0, text.length + 1))
+        if (text.length === fullText.length) {
+          setTimeout(() => setIsDeleting(true), delay)
+        }
+      }, 100)
     }
 
-    timeout = setTimeout(type, 100)
-
-    return () => clearTimeout(timeout)
-  }, [currentText, currentTextIndex, isDeleting, texts, delay])
+    return () => clearTimeout(timer)
+  }, [text, index, isDeleting, texts, delay])
 
   return (
-    <span className="relative">
-      {currentText}
+    <span>
+      {text}
       <span className="inline-block w-1 h-8 md:h-10 bg-primary-500 ml-1 animate-pulse" />
     </span>
   )
