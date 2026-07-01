@@ -1,8 +1,34 @@
 import { motion } from 'framer-motion'
+import { useNavigate, useLocation } from 'react-router-dom'
 import TypeWriter from '../animations/TypeWriter'
-import Button from '../ui/Button'
 
 const Hero = () => {
+  const navigate = useNavigate()
+  const location = useLocation()
+
+  const handleScrollToContact = () => {
+    // Si estamos en home, scrollear directamente
+    if (location.pathname === '/') {
+      const section = document.getElementById('contact')
+      if (section) {
+        section.scrollIntoView({ behavior: 'smooth' })
+      }
+    } else {
+      // Si estamos en otra página, navegar a home y luego scrollear
+      navigate('/')
+      setTimeout(() => {
+        const section = document.getElementById('contact')
+        if (section) {
+          section.scrollIntoView({ behavior: 'smooth' })
+        }
+      }, 300)
+    }
+  }
+
+  const handleGoToVideos = () => {
+    navigate('/videos')
+  }
+
   return (
     <section className="min-h-screen flex items-center justify-center relative overflow-hidden">
       <video 
@@ -52,12 +78,18 @@ const Hero = () => {
           </p>
           
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button variant="primary" size="large" href="#portfolio">
+            <button 
+              onClick={handleGoToVideos}
+              className="bg-primary-500 hover:bg-primary-600 text-white font-semibold px-8 py-4 rounded-full transition-all duration-300 hover:shadow-glow hover:scale-105"
+            >
               Ver mi trabajo
-            </Button>
-            <Button variant="secondary" size="large" href="#contact">
+            </button>
+            <button 
+              onClick={handleScrollToContact}
+              className="bg-transparent border-2 border-primary-500 hover:bg-primary-500 text-white font-semibold px-8 py-4 rounded-full transition-all duration-300 hover:shadow-glow hover:scale-105"
+            >
               Contactarme
-            </Button>
+            </button>
           </div>
         </motion.div>
       </div>
