@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { FaEnvelope, FaPhone, FaMapMarkerAlt, FaPaperPlane } from 'react-icons/fa'
+import { FaEnvelope, FaPhone, FaMapMarkerAlt, FaPaperPlane, FaCheckCircle } from 'react-icons/fa'
 import FadeIn from '../animations/FadeIn'
 import Button from '../ui/Button'
 
@@ -11,6 +11,7 @@ const Contact = () => {
   })
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [submitted, setSubmitted] = useState(false)
+  const [error, setError] = useState('')
 
   const handleChange = (e) => {
     setFormData({
@@ -19,35 +20,62 @@ const Contact = () => {
     })
   }
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
     setIsSubmitting(true)
-    
-    setTimeout(() => {
+    setError('')
+
+    try {
+      const response = await fetch('https://api.web3forms.com/submit', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          access_key: import.meta.env.VITE_WEB3FORMS_KEY,
+          name: formData.name,
+          email: formData.email,
+          message: formData.message,
+          subject: `Nuevo mensaje desde tu portfolio - ${formData.name}`,
+          from_name: formData.name,
+          botcheck: ''
+        })
+      })
+
+      const result = await response.json()
+
+      if (result.success) {
+        setSubmitted(true)
+        setFormData({ name: '', email: '', message: '' })
+        setTimeout(() => setSubmitted(false), 5000)
+      } else {
+        setError(result.message || 'Error al enviar el mensaje. Intenta nuevamente.')
+      }
+    } catch (error) {
+      setError('Error de conexión. Verifica tu internet e intenta nuevamente.')
+      console.error('Error:', error)
+    } finally {
       setIsSubmitting(false)
-      setSubmitted(true)
-      setFormData({ name: '', email: '', message: '' })
-      setTimeout(() => setSubmitted(false), 3000)
-    }, 1500)
+    }
   }
 
   const contactInfo = [
     {
       icon: FaEnvelope,
       title: 'Email',
-      info: 'pablo@barrios.com',
-      link: 'mailto:pablo@barrios.com'
+      info: 'polbarrios835237@gmail.com',
+      link: 'mailto:polbarrios835237@gmail.com'
     },
     {
       icon: FaPhone,
       title: 'Teléfono',
-      info: '+54 11 1234-5678',
-      link: 'tel:+541112345678'
+      info: '+54 3765 252582',
+      link: 'tel:+543765252582'
     },
     {
       icon: FaMapMarkerAlt,
       title: 'Ubicación',
-      info: 'Buenos Aires, Argentina',
+      info: 'Posadas, Misiones, Argentina',
       link: '#'
     }
   ]
@@ -103,9 +131,28 @@ const Contact = () => {
 
           <FadeIn direction="right" delay={0.2}>
             <form onSubmit={handleSubmit} className="space-y-6">
+              {/* Mensaje de éxito */}
+              {submitted && (
+                <div className="bg-green-500/20 border border-green-500/50 rounded-xl p-4 text-center animate-fade-in">
+                  <div className="flex items-center justify-center gap-2 mb-1">
+                    <FaCheckCircle className="text-green-400 text-xl" />
+                    <p className="text-green-400 font-semibold">¡Mensaje enviado con éxito! 🎉</p>
+                  </div>
+                  <p className="text-green-300/70 text-sm">Te responderé a la brevedad.</p>
+                </div>
+              )}
+
+              {/* Mensaje de error */}
+              {error && (
+                <div className="bg-red-500/20 border border-red-500/50 rounded-xl p-4 text-center animate-fade-in">
+                  <p className="text-red-400 font-semibold">Error al enviar</p>
+                  <p className="text-red-300/70 text-sm">{error}</p>
+                </div>
+              )}
+
               <div>
                 <label htmlFor="name" className="block text-white/80 text-sm font-medium mb-2">
-                  Nombre completo
+                  Nombre completo *
                 </label>
                 <input
                   type="text"
@@ -114,14 +161,15 @@ const Contact = () => {
                   value={formData.name}
                   onChange={handleChange}
                   required
-                  className="w-full px-4 py-3 bg-dark-light border border-tertiary-800 rounded-xl text-white focus:border-primary-500 focus:outline-none transition-colors"
+                  disabled={isSubmitting || submitted}
+                  className="w-full px-4 py-3 bg-dark-light border border-tertiary-800 rounded-xl text-white focus:border-primary-500 focus:outline-none transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                   placeholder="Tu nombre"
                 />
               </div>
 
               <div>
                 <label htmlFor="email" className="block text-white/80 text-sm font-medium mb-2">
-                  Email
+                  Email *
                 </label>
                 <input
                   type="email"
@@ -130,14 +178,15 @@ const Contact = () => {
                   value={formData.email}
                   onChange={handleChange}
                   required
-                  className="w-full px-4 py-3 bg-dark-light border border-tertiary-800 rounded-xl text-white focus:border-primary-500 focus:outline-none transition-colors"
+                  disabled={isSubmitting || submitted}
+                  className="w-full px-4 py-3 bg-dark-light border border-tertiary-800 rounded-xl text-white focus:border-primary-500 focus:outline-none transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                   placeholder="tu@email.com"
                 />
               </div>
 
               <div>
                 <label htmlFor="message" className="block text-white/80 text-sm font-medium mb-2">
-                  Mensaje
+                  Mensaje *
                 </label>
                 <textarea
                   id="message"
@@ -146,17 +195,21 @@ const Contact = () => {
                   onChange={handleChange}
                   required
                   rows="5"
-                  className="w-full px-4 py-3 bg-dark-light border border-tertiary-800 rounded-xl text-white focus:border-primary-500 focus:outline-none transition-colors resize-none"
+                  disabled={isSubmitting || submitted}
+                  className="w-full px-4 py-3 bg-dark-light border border-tertiary-800 rounded-xl text-white focus:border-primary-500 focus:outline-none transition-colors resize-none disabled:opacity-50 disabled:cursor-not-allowed"
                   placeholder="Cuéntame sobre tu proyecto..."
                 />
               </div>
+
+              {/* Campo oculto anti-spam de Web3Forms */}
+              <input type="checkbox" name="botcheck" className="hidden" />
 
               <Button
                 type="submit"
                 variant="primary"
                 size="large"
                 className="w-full"
-                disabled={isSubmitting}
+                disabled={isSubmitting || submitted}
               >
                 {isSubmitting ? (
                   <span className="flex items-center gap-2">
@@ -165,7 +218,7 @@ const Contact = () => {
                   </span>
                 ) : submitted ? (
                   <span className="flex items-center gap-2">
-                    <FaPaperPlane />
+                    <FaCheckCircle className="text-white" />
                     ¡Mensaje enviado!
                   </span>
                 ) : (
@@ -175,6 +228,10 @@ const Contact = () => {
                   </span>
                 )}
               </Button>
+
+              <p className="text-white/30 text-xs text-center">
+                * Campos obligatorios. Tu información está segura.
+              </p>
             </form>
           </FadeIn>
         </div>
